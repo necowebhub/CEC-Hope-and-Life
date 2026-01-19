@@ -1,6 +1,11 @@
 const listEl = document.getElementById("changelog-list");
 const contentEl = document.getElementById("changelog-content");
 
+marked.use({
+  gfm: true,
+  breaks: false
+});
+
 // Дождаться загрузки marked
 window.addEventListener('DOMContentLoaded', () => {
   // Проверка загрузки marked
@@ -54,4 +59,49 @@ function loadChangelog(file, element) {
       console.error('Ошибка загрузки changelog:', err);
       contentEl.innerHTML = `<p style="color: red;">Ошибка загрузки: ${err.message}</p>`;
     });
+
+  makeCheckboxesInteractive();
+}
+
+function makeCheckboxesInteractive() {
+  const checkboxes = contentEl.querySelectorAll('input[type="checkbox"]');
+  
+  checkboxes.forEach((checkbox, index) => {
+    const li = checkbox.closest('li');
+    if (!li) return;
+
+    li.classList.add('task-list-item');
+    
+    checkbox.removeAttribute('disabled');
+
+    const checkboxId = `${currentFile}-checkbox-${index}`;
+    checkbox.id = checkboxId;
+
+    const text = li.childNodes[1]?.textContent?.trim() || '';
+    const label = document.createElement('label');
+    label.htmlFor = checkboxId;
+    label.textContent = text;
+    
+    li.innerHTML = '';
+    li.appendChild(checkbox);
+    li.appendChild(label);
+
+    const savedState = localStorage.getItem(checkboxId);
+    if (savedState === 'true') {
+      checkbox.checked = true;
+      li.classList.add('checked');
+    }
+
+    checkbox.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      
+      localStorage.setItem(checkboxId, isChecked);
+      
+      if (isChecked) {
+        li.classList.add('checked');
+      } else {
+        li.classList.remove('checked');
+      }
+    });
+  });
 }
