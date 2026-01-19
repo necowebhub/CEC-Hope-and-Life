@@ -1,14 +1,33 @@
 const listEl = document.getElementById("changelog-list");
 const contentEl = document.getElementById("changelog-content");
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+let currentFile = null;
 
 marked.use({
   gfm: true,
   breaks: false
 });
 
-// Дождаться загрузки marked
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('visible');
+});
+
+function closeMobileMenu() {
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('visible');
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  // Проверка загрузки marked
   if (typeof marked === 'undefined') {
     contentEl.innerHTML = '<p style="color: red;">Ошибка: библиотека marked не загружена</p>';
     return;
@@ -61,6 +80,8 @@ function loadChangelog(file, element) {
     });
 
   makeCheckboxesInteractive();
+
+  contentEl.parentElement.scrollTop = 0;
 }
 
 function makeCheckboxesInteractive() {
