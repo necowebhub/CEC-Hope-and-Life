@@ -35,9 +35,28 @@
     .layout {
       display: flex;
       height: 100vh;
+      position: relative;
     }
 
-    /* ───── Sidebar ───── */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1000;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .menu-toggle:active {
+      background: var(--bg-hover);
+    }
 
     .sidebar {
       width: 300px;
@@ -45,6 +64,7 @@
       background: var(--bg-panel);
       border-right: 1px solid var(--border);
       overflow-y: auto;
+      transition: transform 0.3s ease;
     }
 
     .sidebar h2 {
@@ -60,11 +80,12 @@
     }
 
     .sidebar li {
-      padding: 8px 10px;
+      padding: 12px 10px;
       margin-bottom: 4px;
       cursor: pointer;
       border-radius: 6px;
       color: var(--text-main);
+      font-size: 14px;
     }
 
     .sidebar li:hover {
@@ -76,8 +97,6 @@
       color: #ffffff;
     }
 
-    /* ───── Content ───── */
-
     .content {
       flex: 1;
       padding: 32px;
@@ -87,8 +106,6 @@
     .content article {
       max-width: 900px;
     }
-
-    /* ───── Markdown styles ───── */
 
     .content h1,
     .content h2,
@@ -152,13 +169,156 @@
       padding-left: 16px;
       color: var(--text-muted);
     }
+
+    .content input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      cursor: pointer;
+      vertical-align: middle;
+      accent-color: var(--bg-active);
+      flex-shrink: 0;
+    }
+
+    .content .task-list-item {
+      list-style: none;
+      display: flex;
+      align-items: flex-start;
+      margin-left: -24px;
+      padding: 8px 0;
+    }
+
+    .content .task-list-item input[type="checkbox"] {
+      margin-top: 2px;
+    }
+
+    .content .task-list-item.checked {
+      opacity: 0.6;
+    }
+
+    .content .task-list-item.checked label {
+      text-decoration: line-through;
+    }
+
+    .content .task-list-item label {
+      cursor: pointer;
+      flex: 1;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .content {
+        padding: 70px 16px 16px 16px;
+        width: 100%;
+      }
+
+      .content h1 {
+        font-size: 22px;
+      }
+
+      .content h2 {
+        font-size: 18px;
+      }
+
+      .content h3 {
+        font-size: 16px;
+      }
+
+      .content pre {
+        padding: 12px;
+        font-size: 13px;
+      }
+
+      .content code {
+        font-size: 0.85em;
+      }
+
+      .content input[type="checkbox"] {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+      }
+
+      .content .task-list-item {
+        padding: 12px 0;
+      }
+
+      .content .task-list-item label {
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+      }
+
+      .overlay.visible {
+        display: block;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .content {
+        padding: 70px 12px 12px 12px;
+      }
+
+      .sidebar {
+        width: 280px;
+      }
+
+      .content h1 {
+        font-size: 20px;
+      }
+
+      .content h2 {
+        font-size: 17px;
+      }
+    }
+    
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .sidebar {
+        width: 250px;
+      }
+
+      .content {
+        padding: 24px;
+      }
+    }
   </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </head>
 <body>
+  <button class="menu-toggle" id="menuToggle">☰ Меню</button>
+  <div class="overlay" id="overlay"></div>
+  
   <div class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar>
       <h2>Changelogs</h2>
       <ul id="changelog-list"></ul>
     </aside>
