@@ -1,6 +1,7 @@
 const listEl = document.getElementById("changelog-list");
 const contentEl = document.getElementById("changelog-content");
 const menuToggle = document.getElementById("menuToggle");
+const closeMenu = document.getElementById("closeMenu");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 let currentFile = null;
@@ -10,20 +11,25 @@ marked.use({
   breaks: false
 });
 
-menuToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('visible');
-});
+function openMenu() {
+  sidebar.classList.add('open');
+  overlay.classList.add('visible');
+  menuToggle.classList.add('hidden');
+}
 
-overlay.addEventListener('click', () => {
+function closeMenuFunc() {
   sidebar.classList.remove('open');
   overlay.classList.remove('visible');
-});
+  menuToggle.classList.rempve('hidden');
+}
+
+menuToggle.addEventListener('click', openMenu);
+overlay.addEventListener('click', closeMenuFunc);
+closeMenu.addEventListener('click', closeMenuFunc);
 
 function closeMobileMenu() {
   if (window.innerWidth <= 768) {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('visible');
+     closeMenuFunc();
   }
 }
 
@@ -71,8 +77,8 @@ function loadChangelog(file, element) {
       return res.text();
     })
     .then(md => {
-      // Правильный способ использования marked в новых версиях
       contentEl.innerHTML = marked.parse(md);
+      closeMobileMenu();
     })
     .catch(err => {
       console.error('Ошибка загрузки changelog:', err);
