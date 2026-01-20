@@ -79,50 +79,5 @@ function loadChangelog(file, element) {
       contentEl.innerHTML = `<p style="color: red;">Ошибка загрузки: ${err.message}</p>`;
     });
 
-  makeCheckboxesInteractive();
-
   contentEl.parentElement.scrollTop = 0;
-}
-
-function makeCheckboxesInteractive() {
-  const checkboxes = contentEl.querySelectorAll('input[type="checkbox"]');
-  
-  checkboxes.forEach((checkbox, index) => {
-    const li = checkbox.closest('li');
-    if (!li) return;
-
-    li.classList.add('task-list-item');
-    
-    checkbox.removeAttribute('disabled');
-
-    const checkboxId = `${currentFile}-checkbox-${index}`;
-    checkbox.id = checkboxId;
-
-    const text = li.childNodes[1]?.textContent?.trim() || '';
-    const label = document.createElement('label');
-    label.htmlFor = checkboxId;
-    label.textContent = text;
-    
-    li.innerHTML = '';
-    li.appendChild(checkbox);
-    li.appendChild(label);
-
-    const savedState = localStorage.getItem(checkboxId);
-    if (savedState === 'true') {
-      checkbox.checked = true;
-      li.classList.add('checked');
-    }
-
-    checkbox.addEventListener('change', (e) => {
-      const isChecked = e.target.checked;
-      
-      localStorage.setItem(checkboxId, isChecked);
-      
-      if (isChecked) {
-        li.classList.add('checked');
-      } else {
-        li.classList.remove('checked');
-      }
-    });
-  });
 }
