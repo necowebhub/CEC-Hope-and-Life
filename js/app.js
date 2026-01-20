@@ -20,7 +20,7 @@ function openMenu() {
 function closeMenuFunc() {
   sidebar.classList.remove('open');
   overlay.classList.remove('visible');
-  menuToggle.classList.rempve('hidden');
+  menuToggle.classList.remove('hidden');
 }
 
 menuToggle.addEventListener('click', openMenu);
