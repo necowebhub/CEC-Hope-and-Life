@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Changelog Wiki</title>
+  <link rel="icon" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -62,6 +63,40 @@
     .menu-toggle.hidden {
       opacity: 0;
       pointer-events: none;
+    }
+
+    .copy-button {
+      display: block;
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 1000;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 18px;
+      transition: opacity 0.3s ease;
+    }
+
+    .print-button {
+      display: block;
+      position: fixed;
+      top: 16px;
+      right: 56px;
+      z-index: 1000;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 18px;
+      transition: opacity 0.3s ease;
     }
 
     .close-menu {
@@ -293,8 +328,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </head>
 <body>
-  <button class="menu-toggle" id="menuToggle">☰ Меню</button>
   <div class="overlay" id="overlay"></div>
+  
+  <div>
+    <button class="menu-toggle" id="menuToggle">☰ Меню</button>
+    <div>
+      <button class="copy-button" id="copyButton">❐</button>
+      <button class="print-button" id="sendOnPrint">🖶</button>
+    </div>
+  </div>
   
   <div class="layout">
     <aside class="sidebar" id="sidebar">
