@@ -7,6 +7,7 @@ const sendOnPrint = document.getElementById("sendOnPrint");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 let currentFile = null;
+let currentMarkdown = "";
 
 marked.use({
   gfm: true,
@@ -79,6 +80,7 @@ function loadChangelog(file, element) {
       return res.text();
     })
     .then(md => {
+      currentMarkdown = md;
       contentEl.innerHTML = marked.parse(md);
       closeMobileMenu();
     })
@@ -89,3 +91,35 @@ function loadChangelog(file, element) {
 
   contentEl.parentElement.scrollTop = 0;
 }
+
+copyButton.addEventListener('click', () => {
+  if (!currentMarkdown) return;
+  navigator.clipboard.writeText(currentMarkdown).then(() => {
+    copyButton.textContent = '✓';
+    setTimeout(() => copyButton.textContent = '❐', 2000);
+  }).catch(() => {
+    alert('Не удалось скопировать');
+  });
+});
+
+sendOnPrint.addEventListener('click', () => {
+  if (!currentMarkdown) return;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html><head>
+      <meta charset="UTF-8">
+      <title>Print</title>
+      <style>
+        body { font-family: sans-serif; padding: 32px; max-width: 900px; margin: 0 auto; }
+        h1, h2, h3 { border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+        code { background: #f0f0f0; padding: 2px 5px; border-radius: 3px; }
+        pre { background: #f0f0f0; padding: 12px; border-radius: 6px; overflow-x: auto; }
+        ul { padding-left: 20px; }
+      </style>
+    </head><body>${marked.parse(currentMarkdown)}</body></html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+});
