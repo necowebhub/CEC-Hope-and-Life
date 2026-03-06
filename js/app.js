@@ -92,17 +92,19 @@ function loadChangelog(file, element) {
   contentEl.parentElement.scrollTop = 0;
 }
 
-copyButton.addEventListener('click', () => {
+function copyButtonFunc() {
   if (!currentMarkdown) return;
-  navigator.clipboard.writeText(currentMarkdown).then(() => {
-    copyButton.textContent = '✓';
-    setTimeout(() => copyButton.textContent = '❐', 2000);
-  }).catch(() => {
-    alert('Не удалось скопировать');
-  });
-});
+    navigator.clipboard.writeText(currentMarkdown).then(() => {
+      copyButton.textContent = '✓';
+      setTimeout(() => copyButton.textContent = '❐', 2000);
+    }).catch(() => {
+      alert('Не удалось скопировать');
+    });
+}
 
-sendOnPrint.addEventListener('click', () => {
+copyButton.addEventListener('click', copyButtonFunc);
+
+function sendOnPrintFunc() {
   if (!currentMarkdown) return;
   const printWindow = window.open('', '_blank');
   printWindow.document.write(`
@@ -122,4 +124,6 @@ sendOnPrint.addEventListener('click', () => {
   printWindow.document.close();
   printWindow.focus();
   printWindow.print();
-});
+}
+
+sendOnPrint.addEventListener('click', sendOnPrintFunc);
